@@ -1,0 +1,12 @@
+// composer.json
+// 
+// Configuration des dépendances PHP et métadonnées du projet
+// 
+// Commentaire spécifique: Configuration JSON pour le projet App-Soutenance
+// 
+// @author ManuelD-Aho
+// @created 2025-04-21 16:18:23
+
+{
+  "_comment": "Configuration JSON ici"
+}

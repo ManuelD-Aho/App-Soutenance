@@ -1,0 +1,11 @@
+# .htaccess
+# 
+# Configuration Apache avec règles de réécriture pour le routeur frontal
+# 
+# Commentaire spécifique: Configuration serveur Apache pour le routage de l'application App-Soutenance
+# 
+# @author ManuelD-Aho
+# @created 2025-04-21 16:18:23
+
+# Configuration Apache ici
+

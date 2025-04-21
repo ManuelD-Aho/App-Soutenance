@@ -1,0 +1,11 @@
+# docker-compose.dev.yml
+#
+# Configuration des services Docker pour l'environnement de développement
+#
+# Commentaire spécifique: Configuration CI/CD pour le déploiement automatisé du projet App-Soutenance
+#
+# @author ManuelD-Aho
+# @created 2025-04-21 16:18:23
+
+# Configuration YAML ici
+
