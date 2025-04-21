@@ -1,11 +1,76 @@
-# docker-compose.dev.yml
-#
-# Configuration des services Docker pour l'environnement de développement
-#
-# Commentaire spécifique: Configuration CI/CD pour le déploiement automatisé du projet App-Soutenance
-#
-# @author ManuelD-Aho
-# @created 2025-04-21 16:18:23
+version: '3.8'
 
-# Configuration YAML ici
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    container_name: app-soutenance-app
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/html
+      - ./docker/dev/php.ini:/usr/local/etc/php/conf.d/custom.ini
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+      - mailhog
+    networks:
+      - app-network
+    environment:
+      - APP_ENV=development
+      - DB_HOST=db
+      - MAIL_HOST=mailhog
 
+  db:
+    image: mysql:8.0
+    container_name: app-soutenance-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: app_soutenance
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: app_password
+      MYSQL_ROOT_PASSWORD: root_password
+      SERVICE_NAME: mysql
+      SERVICE_TAGS: dev
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./soutenance.sql:/docker-entrypoint-initdb.d/soutenance.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: app-soutenance-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root_password
+      UPLOAD_LIMIT: 100M
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: app-soutenance-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025" # SMTP
+      - "8025:8025" # Interface web
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db-data:
+    driver: local

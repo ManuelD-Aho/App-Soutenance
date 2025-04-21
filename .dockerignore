@@ -1,11 +1,48 @@
-# .dockerignore
-# 
-# Liste des fichiers à exclure lors de la construction des images Docker
-# 
-# Commentaire spécifique: Fichier de configuration pour le projet App-Soutenance
-# 
-# @author ManuelD-Aho
-# @created 2025-04-21 16:18:23
+# App-Soutenance - Configuration Docker
+# ManuelD-Aho - 2025-04-21
 
-# Contenu ici
+# Contrôle de version
+.git
+.github
+.gitattributes
+.gitignore
 
+# Configuration Docker
+.dockerignore
+docker-compose*.yml
+
+# Dépendances
+/vendor
+/node_modules
+
+# Tests
+/tests
+phpunit.xml
+
+# Documentation
+README.md
+CHANGELOG.md
+LICENSE.md
+CONTRIBUTING.md
+
+# Environnement
+.env
+.env.example
+.env.*.php
+.env.php
+
+# Fichiers IDE
+/.idea
+/.vscode
+*.sublime-project
+*.sublime-workspace
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Fichiers temporaires et logs
+*.log
+*.cache
+.phpunit.result.cache
+.php_cs.cache

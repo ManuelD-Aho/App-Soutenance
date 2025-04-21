@@ -1,11 +1,40 @@
-# .gitignore
-# 
-# Liste des fichiers et dossiers à exclure du dépôt Git
-# 
-# Commentaire spécifique: Fichier de configuration pour le projet App-Soutenance
-# 
-# @author ManuelD-Aho
-# @created 2025-04-21 16:18:23
+# App-Soutenance - Configuration Git
+# ManuelD-Aho - 2025-04-21
 
-# Contenu ici
+# Fichiers d'environnement
+.env
+.env.backup
 
+# Dépendances
+/vendor
+/node_modules
+
+# Fichiers générés
+/public/uploads/*
+!/public/uploads/rapports/.gitkeep
+/logs/*
+!/logs/.gitkeep
+
+# Cache et fichiers temporaires
+.phpunit.result.cache
+.php_cs.cache
+composer.phar
+*.log
+*.cache
+.DS_Store
+Thumbs.db
+
+# Fichiers IDE
+/.idea
+/.vscode
+*.sublime-project
+*.sublime-workspace
+.phpstorm.meta.php
+_ide_helper.php
+
+# Fichiers spécifiques Docker
+.docker-sync
+docker-compose.override.yml
+
+# Fichiers Azure
+.azure/config/secrets/*
