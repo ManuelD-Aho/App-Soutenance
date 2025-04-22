@@ -1,71 +1,73 @@
 version: '3.8'
 
 services:
+  # Service PHP/Apache pour l'application
   app:
     build:
       context: .
-      dockerfile: docker/dev/Dockerfile
-    container_name: app-soutenance-app
-    restart: unless-stopped
+      dockerfile: Dockerfile
+    container_name: app-soutenance-dev
     volumes:
+      # Montage du code source pour le développement en temps réel
       - .:/var/www/html
-      - ./docker/dev/php.ini:/usr/local/etc/php/conf.d/custom.ini
+      # Configuration PHP personnalisée
+      - ./php.ini:/usr/local/etc/php/conf.d/custom.ini
     ports:
       - "8080:80"
-    depends_on:
-      - db
-      - mailhog
-    networks:
-      - app-network
     environment:
       - APP_ENV=development
-      - DB_HOST=db
-      - MAIL_HOST=mailhog
-
-  db:
-    image: mysql:8.0
-    container_name: app-soutenance-db
+      - PHP_IDE_CONFIG=serverName=app-soutenance
+    depends_on:
+      - db
+    networks:
+      - app-network
     restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: app_soutenance
-      MYSQL_USER: app_user
-      MYSQL_PASSWORD: app_password
-      MYSQL_ROOT_PASSWORD: root_password
-      SERVICE_NAME: mysql
-      SERVICE_TAGS: dev
+
+  # Service MySQL pour la base de données
+  db:
+    image: mysql:8.0-debian
+    container_name: app-soutenance-db-dev
     volumes:
       - db-data:/var/lib/mysql
+      # Initialisation de la base de données avec le fichier SQL existant
       - ./soutenance.sql:/docker-entrypoint-initdb.d/soutenance.sql
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
     ports:
+      # Port exposé uniquement en développement
       - "3306:3306"
     networks:
       - app-network
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: app-soutenance-phpmyadmin
     restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  # Service phpMyAdmin pour la gestion de la base de données - Accès sans authentification
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: app-soutenance-phpmyadmin
     environment:
       PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
       PMA_USER: root
-      PMA_PASSWORD: root_password
-      UPLOAD_LIMIT: 100M
+      PMA_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      PMA_PMADB: phpmyadmin
+      UPLOAD_LIMIT: 64M
+      # Connexion automatique sans demande d'authentification
+      PMA_AUTO_LOGIN: 'true'
+      PMA_ABSOLUTE_URI: http://localhost:${PMA_PORT}/
     ports:
-      - "8081:80"
+      - "${PMA_PORT}:80"
     depends_on:
       - db
     networks:
       - app-network
-
-  mailhog:
-    image: mailhog/mailhog
-    container_name: app-soutenance-mailhog
     restart: unless-stopped
-    ports:
-      - "1025:1025" # SMTP
-      - "8025:8025" # Interface web
-    networks:
-      - app-network
 
 networks:
   app-network:
