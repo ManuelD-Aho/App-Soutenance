@@ -1,0 +1,48 @@
+Catégorie,Fonction,Description,Syntaxe,Exemple
+Ressources statiques,css,URL vers un fichier CSS,"css(string $filename, bool $cacheBusting=true)",<?= css('styles') ?>
+Ressources statiques,js,URL vers un fichier JavaScript,"js(string $filename, bool $cacheBusting=true)",<?= js('main') ?>
+Ressources statiques,image,URL vers une image,"image(string $filename, bool $cacheBusting=true)",<?= image('logo.png') ?>
+Ressources statiques,asset,URL vers un fichier public,"asset(string $path, bool $cacheBusting=true)",<?= asset('favicon.ico') ?>
+Ressources statiques,upload,URL vers un fichier uploadé,"upload(string $path, bool $download=false)",<?= upload('rapports/rapport.pdf') ?>
+Ressources statiques,rapport,URL vers un rapport (ID ou nom),"rapport(int|string $idOrFilename, bool $download=false)",<?= rapport(123) ?>
+Vues & Templates,partial,Inclut un partiel,"partial(string $name, array $data=[])","<?= partial('header', ['title'=>'Titre']) ?>"
+Vues & Templates,view,Inclut une vue,"view(string $path, array $data=[])","<?= view('etudiant/dashboard', ['rapports'=>$rapports]) ?>"
+Routes & URL,route,Génère URL pour route nommée,"route(string $name, array $params=[])",<?= route('home') ?>
+Routes & URL,redirect,Redirige vers route ou URL,"redirect(string $routeName, array $params=[], int $statusCode=302)","redirect('rapport.view', ['id'=>123])"
+Routes & URL,routeIs,Vérifie motif de route actuelle,routeIs(string $pattern),<?php if(routeIs('etudiant.*')): ?>
+Routes & URL,urlHas,Vérifie segment dans URI,urlHas(string $segment),<?php if(urlHas('admin')): ?>
+Sécurité & Validation,csrfToken,Génère token CSRF,csrfToken(),<?= csrfToken() ?>
+Sécurité & Validation,csrfField,Champ caché CSRF,csrfField(),<?= csrfField() ?>
+Sécurité & Validation,verifyCsrfToken,Vérifie validité du token CSRF,verifyCsrfToken(?string $token=null),if(!verifyCsrfToken()) {...}
+Sécurité & Validation,e,Échappe pour HTML,e(mixed $data),<?= e($title) ?>
+Sécurité & Validation,clean,Nettoie entrée utilisateur,"clean(string $input, bool $stripTags=true)",$email = clean(\$_POST['email']);
+Sécurité & Validation,isAjax,Détecte requête AJAX,isAjax(),if(isAjax()){...}
+Sécurité & Validation,jsonResponse,Réponse JSON et exit,"jsonResponse(array $data, int $statusCode=200)",jsonResponse(['ok'=>true]);
+Flash Messages,setFlash,Définit un message flash,"setFlash(string $key, string $message)","setFlash('success','OK');"
+Flash Messages,flash,Affiche un message flash,flash(string $key),<?= flash('success') ?>
+Flash Messages,hasFlash,Vérifie existence de message flash,hasFlash(string $key),if(hasFlash('error')) {...}
+Auth & Utilisateurs,isAuthenticated,Vérifie si utilisateur est connecté,isAuthenticated(),if(isAuthenticated()){...}
+Auth & Utilisateurs,getCurrentUserId,Retourne ID utilisateur,getCurrentUserId(),$id = getCurrentUserId();
+Auth & Utilisateurs,getCurrentUserRole,Retourne rôle utilisateur,getCurrentUserRole(),$role = getCurrentUserRole();
+Auth & Utilisateurs,currentUser,Retourne données utilisateur connecté,currentUser(),$user = currentUser();
+Auth & Utilisateurs,hasRole,Vérifie rôle(s),hasRole(string|array $roles),if(hasRole('admin')){...}
+Auth & Utilisateurs,can,Vérifie permission sur ressource,"can(string $action,string $resource,?int $id=null)","if(can('edit','rapport',123)){...}"
+Dates & Formatage,formatDate,Formate date SQL,"formatDate(?string $date,string $format='d/m/Y')",<?= formatDate($date) ?>
+Dates & Formatage,formatDateTime,Formate date-heure,"formatDateTime(?string $dt,string $fmt='d/m/Y H:i')",<?= formatDateTime($dt) ?>
+Dates & Formatage,timeAgo,Temps relatif,timeAgo(string $datetime),<?= timeAgo($dt) ?>
+Texte & Valeurs,truncate,Coupe chaîne,"truncate(string $str,int $len=100,string $append='...')","<?= truncate($text,150) ?>"
+Texte & Valeurs,formatFileSize,Formate taille fichiers,"formatFileSize(int $bytes,int $precision=2)",<?= formatFileSize($size) ?>
+Logging,logAction,Log action utilisateur,"logAction(string $action,array $details=[],string $severity='info')","logAction('Download',['id'=>123]);"
+Logging,logError,Log erreur et exception,"logError(\Throwable $e,array $context=[])",logError($e);
+HTTP & Paramètres,get,Récupère param GET,"get(string $key,$default=null)","$p = get('page',1);"
+HTTP & Paramètres,post,Récupère param POST,"post(string $key,$default=null)",$e = post('email');
+HTTP & Paramètres,only,Récupère plusieurs champs POST,only(array $keys),"$data=only(['nom','email']);"
+HTTP & Paramètres,hasFile,Vérifie upload fichier,hasFile(string $key),if(hasFile('file')){...}
+HTTP & Paramètres,file,Infos fichier uploadé,file(string $key),$f=file('file');
+Environnement,isDev/isProd/isTest,Environnement d'exécution,isDev() / isProd() / isTest(),if(isDev()){...}
+Configuration,config,Accès config,"config(string $key,$default=null)",config('app.name')
+Validation,validate,Valide selon règles,"validate(array $data,array $rules)","[$ok,$err]=validate(\$_POST,['email'=>'required|email']);"
+Validation,isValidEmail,Vérifie email valide,isValidEmail(string $email),if(!isValidEmail($e)){...}
+Validation,isValidUrl,Vérifie URL valide,isValidUrl(string $url),if(!isValidUrl($u)){...}
+Debug,debug,Dump var si debug,"debug(mixed $data,bool $die=false)","debug($var, true);"
+Debug,dd,Dump and die,dd(...$data),"dd($var1, $var2);"

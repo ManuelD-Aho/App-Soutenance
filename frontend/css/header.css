@@ -1,0 +1,385 @@
+@import url("styles.css");
+
+/* Importation des polices si non incluses dans styles.css */
+@import url("https://use.typekit.net/bfu2oym.css");
+
+/* Structure principale du header */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+    width: 100%;
+    background-color: var(--background-primary);
+    border-bottom: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 10000000000000000000000000000000000000000;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    padding-left: 24px;  /* Ajout d'un espace à gauche */
+    padding-right: 24px; /* Ajout d'un espace à droite */
+    box-sizing: border-box; /* Pour que le padding soit inclus dans la largeur de 100% */
+}
+
+/* Logo et identité visuelle */
+.header__logo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.header__logo img {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.header__logo img:hover {
+    transform: scale(1.05);
+}
+
+.header__logo span {
+    font-variation-settings: "wght" 600;
+    font-size: 20px;
+    color: var(--primary-color);
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+    transition: color 0.3s ease;
+}
+
+/* Barre de recherche */
+.header__search {
+    flex: 0 1 380px;
+    margin: 0 24px;
+    position: relative;
+}
+
+.header__search input {
+    width: 100%;
+    height: 34px;
+    padding: 0 16px 0 38px;
+    background-color: var(--background-input);
+    border: 1px solid transparent;
+    border-radius: 20px;
+    color: var(--text-primary);
+    font-size: 13px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.header__search::before {
+    content: "";
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2349529f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.header__search input:focus {
+    outline: none;
+    background-color: var(--background-primary);
+    border-color: var(--primary-color);
+    box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+}
+
+.header__search input:hover:not(:focus) {
+    border-color: var(--border-medium);
+    box-shadow: 0 1px 3px rgba(32, 33, 36, 0.12);
+}
+
+.header__search input::placeholder {
+    color: var(--text-disabled);
+    font-variation-settings: "wght" 400;
+}
+
+/* Zone des actions utilisateur */
+.header__actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Bouton avec icône (notifications) */
+.icon-btn {
+    background-color: var(--background-input);
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.icon-btn:hover {
+    background-color: var(--button-primary);
+    color: var(--background-primary);
+    transform: translateY(-2px);
+}
+
+.icon-btn:active {
+    transform: translateY(0);
+}
+
+.icon-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2px;
+}
+
+/* Badge de notification */
+.icon-btn::after {
+    content: attr(data-count);
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--button-secondary);
+    color: var(--text-primary);
+    font-size: 10px;
+    font-variation-settings: "wght" 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    visibility: var(--notification-visibility, visible);
+}
+
+/* Masquer le badge si aucune notification */
+.icon-btn:not([data-count]),
+.icon-btn[data-count=""],
+.icon-btn[data-count="0"] {
+    --notification-visibility: hidden;
+}
+
+/* Avatar utilisateur et informations */
+.header__profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 5px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.header__profile:hover {
+    background-color: var(--background-secondary);
+}
+
+.header__profile:active {
+    background-color: var(--background-tertiary);
+}
+
+.header__profile img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-light);
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.header__profile:hover img {
+    border-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+.header__profile span {
+    font-variation-settings: "wght" 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+/* Menu déroulant du profil - À ajouter à header.css */
+
+/* Container du menu déroulant */
+.profile-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 260px;
+    background-color: var(--background-primary);
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-light);
+    padding: 16px;
+    z-index: 200;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+}
+
+/* État actif du menu déroulant */
+.profile-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* En-tête du profil dans le menu déroulant */
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 14px;
+}
+
+.profile-header img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-light);
+}
+
+.profile-info h3 {
+    margin: 0;
+    font-variation-settings: "wght" 600;
+    font-size: 15px;
+    color: var(--text-primary);
+}
+
+.profile-info p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    font-variation-settings: "wght" 400;
+    color: var(--text-secondary);
+}
+
+/* Liste des options du menu */
+.dropdown-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-menu li {
+    margin-bottom: 6px;
+}
+
+.dropdown-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    color: var(--text-primary);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    font-variation-settings: "wght" 500;
+    font-size: 14px;
+}
+
+.dropdown-menu a:hover {
+    background-color: var(--background-secondary);
+    transform: translateX(2px);
+}
+
+.dropdown-menu a:active {
+    background-color: var(--background-tertiary);
+}
+
+.dropdown-menu svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Séparateur dans le menu */
+.dropdown-divider {
+    height: 1px;
+    background-color: var(--border-light);
+    margin: 8px 0;
+}
+
+/* Bouton de déconnexion */
+.logout-btn {
+    color: var(--error) !important;
+}
+
+.logout-btn svg {
+    fill: rgba(239, 83, 80, 1);
+}
+
+/* Positionnement relatif pour le container du profil */
+.header__profile {
+    position: relative;
+}
+
+/* Animation lors de l'initialisation de la page */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.header {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Responsive design */
+@media (max-width: 920px) {
+    .header {
+        padding: 0 16px;
+    }
+
+    .header__search {
+        flex: 0 1 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header__search {
+        flex: 0 1 220px;
+    }
+
+    .header__profile span {
+        display: none;
+    }
+
+    .header__profile {
+        padding: 5px;
+    }
+}
+
+@media (max-width: 576px) {
+    .header__logo span {
+        display: none;
+    }
+
+    .header__search {
+        flex: 0 1 140px;
+        margin: 0 8px;
+    }
+
+    .header__search input {
+        padding-left: 32px;
+    }
+
+    .header__actions {
+        gap: 12px;
+    }
+}
+

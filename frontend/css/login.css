@@ -1,0 +1,133 @@
+@import url("styles.css");
+
+/* Importation des polices si non incluses dans styles.css */
+@import url("https://use.typekit.net/bfu2oym.css");
+
+/* Styles pour la page de connexion */
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.container {
+    background-color: var(--background-primary);
+    border-radius: 10px;
+    box-shadow: var(--shadow-lg);
+    padding: 40px;
+    width: 400px;
+}
+
+h1 {
+    text-align: center;
+    color: var(--text-primary);
+    margin-bottom: 30px;
+    font-weight: 500;
+    font-variation-settings: "wght" 500;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    border: none;
+    border-bottom: 1px solid var(--border-light);
+    outline: none;
+    background: transparent;
+    color: var(--text-primary);
+}
+
+.form-label {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    font-size: 16px;
+    color: var(--text-disabled);
+    pointer-events: none;
+    transition: 0.3s ease all;
+}
+
+.form-input:focus ~ .form-label,
+.form-input:not(:placeholder-shown) ~ .form-label {
+    top: -20px;
+    font-size: 12px;
+    color: var(--primary-color);
+    font-variation-settings: "wght" 500;
+}
+
+.form-input:focus ~ .form-underline:before {
+    transform: scaleX(1);
+}
+
+.form-underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+}
+
+.form-underline:before {
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: var(--primary-color);
+    transform: scaleX(0);
+    transition: 0.3s ease all;
+}
+
+.btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    font-variation-settings: "wght" 600;
+    cursor: pointer;
+    transition: 0.3s ease all;
+}
+
+.btn:hover {
+    box-shadow: var(--shadow-md);
+    background: var(--button-primary-hover);
+}
+
+.forgot-password {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.forgot-password a {
+    color: var(--link-color);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+    color: var(--link-hover);
+}
+
+/* Support du mode sombre automatique grâce aux variables */
+@media (prefers-color-scheme: dark) {
+    .form-input {
+        color: var(--text-primary);
+    }
+
+    .form-input::placeholder {
+        color: var(--text-disabled);
+    }
+}

@@ -1,11 +1,24 @@
-# .htaccess
-# 
-# Configuration Apache avec règles de réécriture pour le routeur frontal
-# 
-# Commentaire spécifique: Configuration serveur Apache pour le routage de l'application App-Soutenance
-# 
-# @author ManuelD-Aho
-# @created 2025-04-21 16:18:23
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
 
-# Configuration Apache ici
+    # Protéger les fichiers sensibles
+    <FilesMatch "^\.env$">
+        Require all denied
+    </FilesMatch>
 
+    # Servir directement les fichiers existants
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Tout le reste passe par index.php
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# Sécurité additionnelle
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "no-referrer-when-downgrade"
+</IfModule>

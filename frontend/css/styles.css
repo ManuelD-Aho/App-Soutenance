@@ -1,13 +1,116 @@
-/**
- * styles.css
- *
- * Styles globaux avec variables CSS, typographie et mise en page responsive
- *
- * Commentaire spécifique: Ces styles définissent l'apparence visuelle du projet App-Soutenance
- *
- * @author ManuelD-Aho
- * @created 2025-04-21 16:18:23
- */
+@import url("https://use.typekit.net/bfu2oym.css");
 
-/* Styles CSS ici */
+:root {
+    color-scheme: light dark;
 
+    /* Couleurs principales (personnalisées) */
+    --primary-color: #49529f; /* Bleu clair */
+    --secondary-color: #acd186; /* Vert clair */
+
+    /* Couleurs des composants - Mode clair */
+    --background-primary: #ffffff;
+    --background-secondary: #f8fafb;
+    --background-tertiary: #ecf0f1;
+    --background-input: #e4e9ec;
+
+    /* Textes */
+    --text-primary: #050e10;
+    --text-secondary: #3e347b; /* Bleu foncé utilisé pour contraste */
+    --text-disabled: #bdc3c7;
+
+    /* Boutons */
+    --button-primary: #49529f;
+    --button-primary-hover: #3e347b;
+    --button-secondary: #acd186;
+    --button-secondary-hover: #8cbd3a;
+    --button-disabled: #d3d6db;
+
+    /* États */
+    --success: rgba(140, 189, 58, 0.45); /* Vert foncé doux */
+    --warning: rgba(255, 193, 7, 0.45); /* Jaune */
+    --error: rgba(239, 83, 80, 0.5);     /* Rouge */
+    --info: rgba(73, 82, 159, 0.45);     /* Bleu clair en transparence */
+
+    /* Bordures */
+    --border-light: #ccd6df;
+    --border-medium: #a3acba;
+    --border-dark: #3e347b;
+
+    /* Dégradés */
+    --gradient-hover: linear-gradient(to bottom,
+    rgba(244, 244, 255, 0.8),
+    rgba(230, 230, 250, 0.9)
+    );
+
+    /* Overlays et shadows */
+    --overlay: rgba(44, 62, 80, 0.1);
+    --shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+    /* Inputs */
+    --input-border: #49529f;
+    --input-focus: rgba(73, 82, 159, 0.2);
+
+    /* Liens */
+    --link-color: #49529f;
+    --link-hover: #3e347b;
+}
+
+/* Mode sombre */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary-color: #49529f;
+        --secondary-color: #acd186;
+
+        --background-primary: #121212;
+        --background-secondary: #1e1e1e;
+        --background-tertiary: #2a2a2a;
+        --background-input: #2d2d2d;
+
+        --text-primary: #eaeaea;
+        --text-secondary: #d4d4f0;
+        --text-disabled: #7f8c8d;
+
+        --button-primary: #49529f;
+        --button-primary-hover: #3e347b;
+        --button-secondary: #acd186;
+        --button-secondary-hover: #8cbd3a;
+        --button-disabled: #4f5b5c;
+
+        --success: rgba(140, 189, 58, 0.3);
+        --warning: rgba(255, 193, 7, 0.3);
+        --error: rgba(231, 76, 60, 0.3);
+        --info: rgba(73, 82, 159, 0.3);
+
+        --border-light: #2c3e50;
+        --border-medium: #3e4a5e;
+        --border-dark: #1a1f2f;
+
+        --gradient-hover: linear-gradient(to bottom,
+        rgba(50, 50, 80, 0.7),
+        rgba(30, 30, 60, 0.9)
+        );
+
+        --overlay: rgba(0, 0, 0, 0.5);
+        --shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
+
+        --input-border: #49529f;
+        --input-focus: rgba(73, 82, 159, 0.2);
+
+        --link-color: #acd186;
+        --link-hover: #8cbd3a;
+    }
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: geologica-variable, sans-serif;
+    font-style: normal;
+    font-variation-settings: "CRSV" 0, "SHRP" 0, "slnt" 0, "wght" 100;
+}

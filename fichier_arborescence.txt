@@ -1,0 +1,295 @@
+/App-soutenance/                      # Racine du projet
+│
+├── /.Github/                         # CI/CD GitHub Actions
+│   ├── /Workflows/                   # Pipelines d'automatisation
+│   │   ├── deploy.yml                # Déploiement continu
+│   │   ├── lint.yml                  # Vérification syntaxe
+│   │   └── tests.yml                 # Automatisation tests
+│   └── /ISSUE_TEMPLATE/              # Templates pour GitHub issues
+│
+├── /.Azure/                          # Azure DevOps
+│   ├── /Pipelines/                   # Définition pipelines
+│   ├── /Arm-templates/               # Infrastructure as code
+│   └── /Scripts/                     # Scripts déploiement
+│
+├── /Backend/                         # Couche métier MVC PHP
+│   ├── /Controllers/                 # Logique métier et coordination
+│   │   ├── BaseController.php        # Classe abstraite parente
+│   │   ├── AuthController.php        # Authentification multi-rôles
+│   │   ├── AdminController.php       # Gestion utilisateurs/config [N4]
+│   │   ├── EtudiantController.php    # Workflow dépôt rapports [N1]
+│   │   ├── EnseignantController.php  # Vérification technique [N2-N3]
+│   │   ├── CommissionController.php  # Délibération, validation [N3]
+│   │   ├── RapportController.php     # Workflow états documents
+│   │   ├── ReferentielController.php # Gestion référentiels académiques
+│   │   └── AuditController.php       # Journalisation et reporting
+│   │
+│   ├── /Models/                      # Entités et associations
+│   │   ├── /Utilisateurs/
+│   │   │   ├── Utilisateur.php       # Classe parente abstraite
+│   │   │   ├── Etudiant.php          # Étudiants (N1)
+│   │   │   ├── Enseignant.php        # Enseignants [flag is_commission] (N2-N3)
+│   │   │   └── PersonnelAdmin.php    # Personnel administratif (N4a,b)
+│   │   │
+│   │   ├── /Rapports/
+│   │   │   ├── Rapport.php           # Modèle principal mémoire
+│   │   │   ├── PieceJointe.php       # Fichiers associés
+│   │   │   ├── Evaluation.php        # Évaluations et notations
+│   │   │   └── CompteRendu.php       # PV de soutenance
+│   │   │
+│   │   ├── /Referentiels/
+│   │   │   ├── UE.php                # Unités d'enseignement
+│   │   │   ├── ECUE.php              # Éléments constitutifs UE
+│   │   │   ├── Fonction.php          # Fonctions personnels
+│   │   │   ├── Grade.php             # Grades enseignants
+│   │   │   ├── Specialite.php        # Domaines spécialisation
+│   │   │   └── NiveauEtude.php       # Niveaux académiques
+│   │   │
+│   │   ├── /Workflow/
+│   │   │   ├── Deposer.php           # Association dépôt rapport
+│   │   │   ├── Approuver.php         # Vérification conformité (N4b)
+│   │   │   ├── Valider.php           # Validation commission (N3)
+│   │   │   └── Affecter.php          # Attribution encadrant/jury
+│   │   │
+│   │   └── /Securite/
+│   │       ├── TypeUtilisateur.php   # Rôles système (N0-N4)
+│   │       ├── GroupeUtilisateur.php # Groupes permissions
+│   │       └── NiveauAccesDonnees.php # Granularité accès
+│   │
+│   └── /Middleware/                  # Filtres et sécurité
+│       ├── JwtAuthMiddleware.php     # Vérification token JWT
+│       ├── RoleMiddleware.php        # Contrôle accès par rôle
+│       ├── CommissionMiddleware.php  # Vérification flag is_commission
+│       ├── CsrfMiddleware.php        # Protection CSRF
+│       └── XssMiddleware.php         # Filtrage XSS
+│
+├── /Frontend/                        # Couche présentation
+│   ├── /Css/                         # Styles et thèmes
+│   │   ├── Styles.css                # Styles principaux
+│   │   ├── print.css                 # Styles impression
+│   │   └── theme.css                 # Variables thème
+│   │
+│   ├── /Js/                          # JavaScript
+│   │   ├── app.js                    # Point entrée
+│   │   ├── validation.js             # Validations côté client
+│   │   └── /Modules/                 # Composants JS
+│   │
+│   ├── /Images/                      # Ressources graphiques
+│   │   ├── logo.png                  # Logo institution
+│   │   └── /Icons/                   # Icônes UI
+│   │
+│   └── /Views/                       # Templates PHP
+│       ├── /Gabarits/                # Layouts principaux (templates de base)
+│       │   ├── base.php              # Template principal avec structure HTML commune
+│       │   ├── auth.php              # Layout spécifique pages authentification
+│       │   ├── admin.php             # Layout zones admin avec menu latéral
+│       │   ├── app.php               # Layout application principale
+│       │   ├── print.php             # Template optimisé impression
+│       │   └── error.php             # Pages erreur (403, 404, 500)
+│       │
+│       ├── /Composants/              # Fragments réutilisables entre vues
+│       │   ├── header.php            # En-tête avec logo, navigation, profil
+│       │   ├── sidebar.php           # Menu latéral contextuel (par rôle)
+│       │   ├── notifications.php     # Système affichage alertes/toasts
+│       │   ├── breadcrumb.php        # Fil d'Ariane navigation
+│       │   ├── pagination.php        # Contrôle pagination listes
+│       │   ├── /Modal/               # Boîtes dialogue modales
+│       │   │   ├── confirmation.php  # Modal confirmation action
+│       │   │   ├── details_rapport.php # Modal détails rapport
+│       │   │   └── commentaire.php   # Modal saisie commentaire
+│       │   ├── /Forms/               # Composants formulaires réutilisables
+│       │   │   ├── file_upload.php   # Composant téléversement fichier
+│       │   │   ├── user_select.php   # Sélecteur utilisateurs (autocomplete)
+│       │   │   ├── date_picker.php   # Sélecteur date
+│       │   │   └── validation.php    # Messages erreur formulaires
+│       │   └── /Widgets/             # Widgets UI réutilisables
+│       │       ├── statut_badge.php  # Badge coloré état workflow
+│       │       ├── progress.php      # Indicateur progression
+│       │       ├── card.php          # Carte contenu
+│       │       └── stat_counter.php  # Compteur statistique
+│       │
+│       ├── /Etudiant/                # Interfaces N1 (Étudiant)
+│       │   ├── dashboard.php         # Tableau bord étudiant (aperçu rapports)
+│       │   ├── nouveau_rapport.php   # Formulaire création nouveau rapport
+│       │   ├── editer_rapport.php    # Modification rapport existant
+│       │   ├── televersement.php     # Interface upload fichiers mémoire/annexes
+│       │   ├── suivi.php             # Historique workflow et commentaires
+│       │   ├── details_rapport.php   # Vue détaillée rapport spécifique
+│       │   ├── commentaires.php      # Liste commentaires sur rapport
+│       │   ├── profile.php           # Gestion profil étudiant
+│       │   ├── messages.php          # Messagerie interne
+│       │   └── historique.php        # Historique actions étudiant
+│       │
+│       ├── /Enseignant/              # Interfaces N2 (Enseignant-Visiteur)
+│       │   ├── dashboard.php         # Tableau bord enseignant visiteur
+│       │   ├── rapports_liste.php    # Liste rapports en lecture seule
+│       │   ├── consultation.php      # Visualisation rapport PDF
+│       │   ├── recherche.php         # Recherche avancée mémoires
+│       │   ├── specialite.php        # Filtre par spécialité
+│       │   ├── profil.php            # Profil enseignant
+│       │   ├── calendrier.php        # Vue calendrier soutenances
+│       │   └── statistiques.php      # Stats lecture seule (limité)
+│       │
+│       ├── /Commission/              # Interfaces N3 (protégées - 3 membres)
+│       │   ├── file_attente.php      # Liste rapports en attente délibération
+│       │   ├── deliberation.php      # Interface délibération et décision
+│       │   ├── attribution.php       # Affectation encadrant/jury
+│       │   ├── planification.php     # Calendrier planification soutenances
+│       │   ├── generation_pv.php     # Interface génération PV officiel
+│       │   ├── signature.php         # Signature électronique documents
+│       │   ├── decisions_anterieures.php # Historique décisions commission
+│       │   ├── mes_decisions.php     # Décisions membre commission connecté
+│       │   ├── statistiques.php      # Vue statistiques décisions
+│       │   ├── /President/           # Réservé Prof Koua Brou (président)
+│       │   │   ├── dashboard.php     # Tableau bord spécifique président
+│       │   │   ├── validation_finale.php # Validation finale décisions
+│       │   │   ├── reassignation.php # Réassignation dossiers entre membres
+│       │   │   └── statistiques_avancees.php # Statistiques performance commission
+│       │   └── /Documents/           # Gestion documents officiels
+│       │       ├── liste_pv.php      # Liste PV générés
+│       │       ├── modeles.php       # Modèles documents
+│       │       └── archives.php      # Archives PV années précédentes
+│       │
+│       ├── /Administration/          # Interfaces N4 (Admin)
+│       │   ├── dashboard.php         # Tableau bord administration
+│       │   ├── /Utilisateurs/        # Gestion comptes utilisateurs
+│       │   │   ├── etudiants.php     # CRUD étudiants
+│       │   │   ├── enseignants.php   # CRUD enseignants
+│       │   │   ├── personnel.php     # CRUD personnel administratif
+│       │   │   ├── import.php        # Import CSV utilisateurs
+│       │   │   ├── export.php        # Export utilisateurs
+│       │   │   ├── reset_password.php # Interface réinitialisation mots passe
+│       │   │   └── logs_connexion.php # Journal connexions utilisateurs
+│       │   │
+│       │   ├── /Referentiels/        # CRUD référentiels académiques
+│       │   │   ├── ue_ecue.php       # Gestion UE/ECUE (imbriqué)
+│       │   │   ├── fonctions.php     # Gestion fonctions personnel
+│       │   │   ├── grades.php        # Gestion grades enseignants
+│       │   │   ├── specialites.php   # Gestion spécialités
+│       │   │   ├── niveaux_etude.php # Gestion niveaux étude
+│       │   │   ├── annees_academiques.php # Gestion années universitaires
+│       │   │   └── entreprises.php   # Gestion entreprises stages
+│       │   │
+│       │   ├── commission.php        # Config membres commission (interface clé)
+│       │   │                         # (Contient limitation 3 membres actifs + président)
+│       │   ├── workflow.php          # Paramètres transitions workflow
+│       │   ├── systeme.php           # Paramètres généraux système
+│       │   ├── backup.php            # Sauvegarde/restauration système
+│       │   ├── maintenance.php       # Mode maintenance et diagnostics
+│       │   ├── emails.php            # Gestion templates emails
+│       │   ├── rapports_problematiques.php # Liste rapports bloqués/exception
+│       │   │
+│       │   ├── /Scolarite/           # Interfaces admin scolarité (N4a)
+│       │   │   ├── dashboard.php     # Tableau bord spécifique scolarité
+│       │   │   ├── inscriptions.php  # Gestion inscriptions
+│       │   │   ├── evaluations.php   # Gestion notes/évaluations
+│       │   │   ├── parcours.php      # Suivi parcours étudiants
+│       │   │   ├── attestations.php  # Génération attestations
+│       │   │   └── statistiques.php  # Statistiques scolarité
+│       │   │
+│       │   ├── /Conformite/          # Interfaces admin conformité (N4b)
+│       │   │   ├── dashboard.php     # Tableau bord spécifique conformité
+│       │   │   ├── verification.php  # Interface vérification SOUMIS→CONFORME
+│       │   │   ├── transfert_commission.php # Transfert vers commission
+│       │   │   ├── relances.php      # Gestion relances automatiques
+│       │   │   ├── checklist.php     # Liste contrôle conformité
+│       │   │   └── statistiques.php  # Statistiques conformité
+│       │   │
+│       │   └── /Koua_brou/           # Interfaces Prof Koua Brou (N4c)
+│       │       ├── dashboard.php     # Tableau bord super-admin
+│       │       ├── supervision.php    # Vue supervision globale
+│       │       ├── validation_urgence.php # Validation urgence hors circuit
+│       │       ├── gestion_droits.php # Gestion fine permissions
+│       │       └── kpi_global.php    # KPI consolidés tous processus
+│       │
+│       ├── /Audit/                   # Interfaces reporting et audit
+│       │   ├── journal.php           # Consultation logs actions (table pister)
+│       │   ├── statistiques.php      # KPI et graphiques analytiques
+│       │   ├── exports.php           # Exports données audit (CSV, Excel)
+│       │   ├── alertes.php           # Configuration seuils alertes
+│       │   ├── /Rapports/            # Rapports analytiques prédéfinis
+│       │   │   ├── performance_workflow.php # Performance processus validation
+│       │   │   ├── activite_utilisateurs.php # Activité par profil utilisateur
+│       │   │   ├── tendances_validation.php # Tendances validation/rejet
+│       │   │   ├── charge_commission.php # Répartition charge commission
+│       │   │   └── temps_traitement.php # Temps moyen traitement par étape
+│       │   └── recherche.php         # Recherche avancée journal
+│       │
+│       ├── /Auth/                    # Pages authentification
+│       │   ├── login.php             # Formulaire connexion
+│       │   ├── password_reset.php    # Réinitialisation mot passe
+│       │   ├── change_password.php   # Changement mot passe
+│       │   ├── first_login.php       # Premier accès (définition mdp)
+│       │   └── locked.php            # Compte verrouillé
+│       │
+│       ├── /Rapports/                # Vues partagées gestion rapports
+│       │   ├── liste.php             # Liste générique rapports filtrable
+│       │   ├── details.php           # Vue détaillée rapport
+│       │   ├── historique.php        # Historique modifications
+│       │   ├── commentaires.php      # Liste commentaires
+│       │   └── fichiers.php          # Liste pièces jointes
+│       │
+│       └── /Errors/                  # Pages erreur
+│           ├── 403.php               # Accès refusé (permission)
+│           ├── 404.php               # Page non trouvée
+│           ├── 500.php               # Erreur serveur
+│           ├── maintenance.php       # Site en maintenance
+│           └── exceeded_quota.php    # Quota dépassé (uploads)
+│
+├── /Service/                         # Services partagés
+│   ├── AuthService.php               # Service principal authentification
+│   ├── JwtService.php                # Gestion tokens JWT
+│   ├── PermissionService.php         # Vérification droits et gestion des session
+│   ├── EmailService.php              # Service envoi emails
+│   ├── /Templates/                   # Templates HTML emails
+│   ├── /Queue/                       # File d'attente emails
+│   ├── Generation.php                # Génération PDF/Word/etc.
+│   ├── /Templates/                   # Templates documents
+│   ├── /Signatures/                  # Gestion signatures électroniques
+│   ├── AuditService.php              # Service logs système
+│   ├── PisterService.php             # Traçabilité actions utilisateurs
+│   ├── ValidationService.php         # Validations données
+│   └── CommissionService.php         # Logique spécifique commission (3 membres)
+│
+├── /Public/                          # Point entrée application
+│   ├── index.php                     # Bootstrap application, point d'entrer
+│   ├── redirection.php               # Dans ce fichier se trouvera toutes les redirections sur chaque page que compose cette application, ça nous évitera de taper à chaque fois, cette page nous permettra d'aller à n'importe quelle page qu'on désire ( En gros c'est une page web avec tous les liens de redirections)
+│   ├── .htaccess                     # Configuration Apache
+│   └── /Uploads/                     # Stockage fichiers
+│       ├── /Rapports/                # PDF mémoires
+│       │   └── /.htaccess            # Protection accès directs
+│       ├── /Signatures/              # Signatures scannées
+│       └── /Temp/                    # Fichiers temporaires
+│
+├── /Tests/                           # Tests automatisés
+│   ├── /Unit/                        # Tests unitaires
+│   │   ├── /Models/                  # Tests modèles
+│   │   ├── /Controllers/             # Tests contrôleurs
+│   │   └── /Services/                # Tests services
+│   │
+│   ├── /Integration/                 # Tests intégration
+│   │   ├── /Api/                     # Tests endpoints
+│   │   └── /Workflow/                # Tests workflow
+│   │
+│   └── /E2e/                         # Tests End-to-End
+│       ├── /Scenarios/               # Parcours utilisateur
+│       └── /Fixtures/                # Données test
+│
+├── /Config/                          # Configuration application
+│   ├── app.php                       # Configuration générale
+│   ├── database.php                  # Paramètres et connexion BDD
+│   ├── Route.php                     # Définition des routes
+│   ├── Routage.php                   # Routeur de l'application
+│   ├── email.php                     # Configuration email
+│   ├── QueryBuilder.php              # Construction requêtes
+│   ├── Repository.php                # Pattern Repository
+│   └── auth.php                      # Paramètres sécurité
+│
+├── docker-compose.yml                # Configuration Docker
+├── .env                              # Variables environnement
+├── Dockerfile                        # Construction image
+├── soutenance.sql                    # Base de données SQL
+├── composer.json                     # Dépendances PHP
+├── php.ini
+├── phpunit.xml                       # Configuration tests
+└── README.md                         # Documentation projet
