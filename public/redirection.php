@@ -30,7 +30,7 @@ if (!empty($_SERVER['HTTP_AUTHORIZATION'])
 }
 
 // 3) Charger les définitions de routes
-$routes = require __DIR__ . '/../Config/Route.php';
+$routes = require __DIR__ . '/../config/Route.php';
 
 // 4) Regrouper par tag et filtrer selon droits (si utilisateur authentifié)
 $grouped = [];

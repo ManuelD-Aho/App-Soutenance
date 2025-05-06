@@ -13,7 +13,7 @@ class Database
     private static ?database $instance = null;
 
     /**
-     * L’objet PDO
+     * L'objet PDO
      * @var PDO
      */
     private PDO $pdo;
@@ -27,8 +27,8 @@ class Database
         $host     = getenv('DB_HOST')     ?: '127.0.0.1';
         $port     = getenv('DB_PORT')     ?: '3306';
         $db       = getenv('DB_DATABASE') ?: 'universite';
-        $user     = getenv('DB_USERNAME') ?: 'app_user';
-        $pass     = getenv('DB_PASSWORD') ?: 'secret_password';
+        $user     = getenv('DB_USERNAME') ?: 'root';
+        $pass     = getenv('DB_PASSWORD') ?: 'root_password';
         $charset  = 'utf8mb4';
 
         $dsn = sprintf(
@@ -38,41 +38,39 @@ class Database
             $db,
             $charset
         );
-
+        
         $options = [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_PERSISTENT         => true,
             PDO::ATTR_EMULATE_PREPARES   => false,
         ];
-
+        
         try {
             $this->pdo = new PDO($dsn, $user, $pass, $options);
         } catch (PDOException $e) {
-            // Vous pouvez logger l’erreur ici si besoin
-            throw new PDOException('Connexion BDD échouée : ' . $e->getMessage(), (int)$e->getCode());
+            throw new PDOException($e->getMessage(), (int)$e->getCode());
         }
     }
-
+    
     /**
-     * Récupère l’instance unique de Database.
+     * Récupère l'instance unique de la classe (Singleton).
      *
-     * @return database
+     * @return Database
      */
-    public static function getInstance(): database
+    public static function getInstance(): Database
     {
         if (self::$instance === null) {
-            self::$instance = new database();
+            self::$instance = new self();
         }
         return self::$instance;
     }
-
+    
     /**
-     * Récupère la connexion PDO.
+     * Récupère l'objet PDO pour les requêtes directes.
      *
      * @return PDO
      */
-    public function getConnection(): PDO
+    public function getPdo(): PDO
     {
         return $this->pdo;
     }

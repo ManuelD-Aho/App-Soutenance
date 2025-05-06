@@ -17,6 +17,14 @@ services:
     environment:
       - APP_ENV=development
       - PHP_IDE_CONFIG=serverName=app-soutenance
+      # variables d'environnement PHP chargées depuis .env
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      # Mode développement
+      - APP_DEBUG=true
     depends_on:
       - db
     networks:
@@ -25,7 +33,7 @@ services:
 
   # Service MySQL pour la base de données
   db:
-    image: mysql:8.0-debian
+    image: mysql:8.3
     container_name: app-soutenance-db-dev
     volumes:
       - db-data:/var/lib/mysql
@@ -33,19 +41,16 @@ services:
       - ./soutenance.sql:/docker-entrypoint-initdb.d/soutenance.sql
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       # Port exposé uniquement en développement
       - "3306:3306"
     networks:
       - app-network
-    restart: unless-stopped
+    restart: always
     command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
-  # Service phpMyAdmin pour la gestion de la base de données - Accès sans authentification
+  # Service phpMyAdmin pour la gestion de la base de données - Accès avec root
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: app-soutenance-phpmyadmin
@@ -53,21 +58,16 @@ services:
       PMA_HOST: db
       PMA_PORT: 3306
       PMA_ARBITRARY: 1
-      PMA_USER: root
-      PMA_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      PMA_PMADB: phpmyadmin
+      PMA_USER: ${DB_USERNAME}
+      PMA_PASSWORD: ${DB_PASSWORD}
       UPLOAD_LIMIT: 64M
-      # Connexion automatique sans demande d'authentification
-      PMA_AUTO_LOGIN: 'true'
-      PMA_ABSOLUTE_URI: http://localhost:${PMA_PORT}/
     ports:
-      - "${PMA_PORT}:80"
+      - "8081:80"
     depends_on:
       - db
     networks:
       - app-network
-    restart: unless-stopped
+    restart: always
 
 networks:
   app-network:

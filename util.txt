@@ -1,0 +1,204 @@
+SYNTHÈSE DU PROJET WEB DE VALIDATION DES MÉMOIRES MIAGE
+🎯 OBJECTIFS DU PROJET
+• Principal: Dématérialiser processus validation mémoires étudiants MIAGE • Secondaires:
+•	Sécuriser workflow approbation multi-niveaux
+•	Centraliser gestion utilisateurs/référentiels académiques
+•	Tracer actions système (audit)
+•	Générer documents officiels (PV)
+•	Fournir KPI décisionnels
+👥 ACTEURS ET RÔLES
+• N0 (VIS): Visiteur - Consultation publique uniquement • N1 (ETU): Étudiant - Dépôt rapports, suivi validation • N2 (ENS): Enseignant-Visiteur - Accès lecture seule • N3 (COM): Commission (exactement 3 enseignants + Prof Koua Brou) - Décisions validation • N4a (ADM-ETU): Admin Scolarité (M. Kamenan) - Gestion référentiels/parcours • N4b (ADM-SOU): Admin Conformité (Mme SERI) - Vérification dossiers • N4c (ADM-GEN): Admin Général (Prof Koua Brou) - Super-admin + membre permanent commission
+🔄 WORKFLOW D'ÉTATS
+• BROUILLON → Création rapport par N1 (Étudiant) • SOUMIS → Dépôt initial par N1 • INCOMPLET ← Rejet conformité par N4b (Mme SERI) • CONFORME ← Validation conformité par N4b • EN_COMMISSION ← Transfert à commission par N4b • ACCEPTÉ/REFUSÉ ← Décision par N3 (Commission) ou N4c (Prof Koua Brou) • PV_GÉNÉRÉ ← Document officiel créé, signé par membres commission
+📊 TABLES CLÉS
+• Utilisateurs:
+•	utilisateur (base), etudiant, enseignant, personnel_admin
+•	typeutilisateur, groupe_utilisateur, niveau_acces_donnees
+• Référentiels académiques:
+•	fonction, grade, specialite, niveau_etude
+•	ue, ecue, annee_academique, entreprise
+• Workflow:
+•	rapport_etudiant, deposer, approuver, valider
+•	affecter, jury, compte_rendu, rendre
+• Parcours & Carrière:
+•	inscrire, evaluer, fairestage, avoir, occuper
+• Audit & Sécurité:
+•	pister, traitement, action
+📝 MODULES CRUD PRÉVUS
+• Identités:
+•	Gestion étudiants (num_etu, nom, prénom, login)
+•	Gestion enseignants (id_ens, identité, spécialité, grade)
+•	Gestion personnel admin (id_pers, identité, poste)
+• Référentiels:
+•	Fonctions, grades, niveaux étude, spécialités
+•	UE/ECUE, années académiques, entreprises
+• Soutenance:
+•	Rapports étudiants (création, upload)
+•	Vérification conformité (N4b)
+•	Validation commission (N3)
+•	Affectation jury/encadrant
+•	Génération comptes-rendus (PDF)
+• Administration:
+•	Gestion utilisateurs techniques
+•	Configuration commission (3 membres max + président)
+🔐 RÈGLES MÉTIER ET SÉCURITÉ
+• Limitation commission: Maximum 3 enseignants actifs + Prof Koua Brou (permanent) • Circuit validation: ETU → ADM-SOU → COM → ADM-GEN • Contrôle d'accès:
+•	Middleware CommissionMiddleware.php filtrant accès routes protégées
+•	Flag enseignant.is_commission limitant accès fonctions délibération
+•	niveau_acces_donnees par profil utilisateur • Audit: Journalisation systématique via pister (traçabilité complète) • Authentification: JWT + middleware verification rôles
+📈 KPI ATTENDUS
+• Performance processus:
+•	Délai moyen traitement (%SOUMIS→CONFORME, %CONFORME→DÉCISION)
+•	Taux validation/rejet par période
+•	Répartition thématiques mémoires acceptés
+• Qualité:
+•	Taux correction après INCOMPLET
+•	Nombre itérations moyennes avant ACCEPTÉ
+• Activité commission:
+•	Volume traité par membre
+•	Temps moyen délibération
+•	Répartition encadrants/directeurs
+🔗 MAPPING ARCHITECTURE/IMPLÉMENTATION
+MERISE → MVC PHP-Docker
+• MCD → backend/models/ (classes PHP):
+•	Entités ⇨ */Utilisateur.php, */Etudiant.php, etc.
+•	Associations ⇨ méthodes dans modèles (ex: Rapport::getEvaluations())
+• MLD → soutenance.sql:
+•	DDL tables ⇨ CREATE TABLE utilisateur (id INT PRIMARY KEY...)
+•	Contraintes intégrité ⇨ ALTER TABLE enseignant ADD CONSTRAINT chk_max_commission...
+• MOT → service/*.php:
+•	Traitements ⇨ CommissionService::validerRapport()
+•	Règles métier ⇨ ValidationService::verifierConformite()
+MVC PHP-Docker
+• Modèles (backend/models/):
+•	Encapsulation données/règles métier
+•	Organisation par domaine: utilisateurs/, rapports/
+• Vues (frontend/views/):
+•	Templates interfaces: gabarits/, fragments/
+•	Pages spécifiques rôles: etudiant/, commission/
+• Contrôleurs (backend/controllers/):
+•	Orchestration requêtes: RapportController.php, CommissionController.php
+•	Logique métier: validation, generation_pv
+• Docker (docker-compose.yml, Dockerfile):
+•	Conteneurisation application
+•	Environnements développement/test/production
+BACKLOG AGILE
+• ÉPIC 1: Auth & Gestion Utilisateurs
+•	US: ETU-6, ADM-ETU-1, ADM-GEN-1, ADM-GEN-2
+•	Fichiers: AuthController.php, AdminController.php
+• ÉPIC 2: Workflow Dépôt & Vérification
+•	US: ETU-1, ETU-2, ETU-3, ETU-4, ADM-SOU-1, ADM-SOU-2
+•	Fichiers: RapportController.php, EtudiantController.php
+• ÉPIC 3: Commission & Validation
+•	US: COM-1, COM-2, COM-3, COM-4, COM-5, ADM-GEN-3
+•	Fichiers: CommissionController.php, views/commission/
+• ÉPIC 4: Documents & Archivage
+•	US: ETU-5, COM-6, ADM-SOU-4
+•	Fichiers: service/email/, service/pdf/
+• ÉPIC 5: Audit & Reporting
+•	US: ADM-GEN-4, ADM-GEN-6
+•	Fichiers: service/audit/AuditService.php
+✅ PARTICULARITÉS COMMISSION
+• Composition: 3 enseignants maximum + Prof Koua Brou (président permanent) • Implémentation:
+•	Flag is_commission dans table enseignant
+•	Contrainte CHECK limitant à 3 actifs maximum
+•	Interface admin dédiée pour sélection membres • Workflow:
+•	Seuls membres commission accèdent écrans délibération
+•	Validation finale requiert présence président (Koua Brou)
+•	Tous membres signent PV généré • Audit:
+•	Journalisation changements composition via CFG_COMMISSION
+•	Historique toutes décisions par composition
+📚 GLOSSAIRE
+• PV: Procès-Verbal (document officiel attestant décision commission) • CRUD: Create, Read, Update, Delete (opérations base sur entité) • MCD: Modèle Conceptuel de Données (entités/associations) • MLD: Modèle Logique de Données (tables/relations) • KPI: Key Performance Indicator (indicateur performance clé) • CI/CD: Continuous Integration/Deployment (intégration/déploiement continus) • MIAGE: Méthodes Informatiques Appliquées à la Gestion des Entreprises • ECUE: Élément Constitutif d'Unité d'Enseignement • UE: Unité d'Enseignement • DDL: Data Definition Language (langage définition données SQL)
+
+
+📑 USER STORIES COMPLÈTES
+Visiteurs (N0)
+1.	En tant que visiteur, je peux consulter les actualités publiques du département MIAGE.
+2.	En tant que visiteur, je peux voir la liste des thèmes de mémoire acceptés par année.
+3.	En tant que visiteur, je peux consulter les informations générales sur le processus de soutenance.
+4.	En tant que visiteur, je peux m'authentifier pour accéder à mon espace selon mon rôle.
+5.	En tant que visiteur, je peux demander la réinitialisation de mon mot de passe oublié.
+Étudiants (N1)
+6.	En tant qu'étudiant, je peux créer un nouveau rapport à l'état BROUILLON.
+7.	En tant qu'étudiant, je peux éditer mon rapport tant qu'il est en BROUILLON.
+8.	En tant qu'étudiant, je peux téléverser mon fichier mémoire (PDF).
+9.	En tant qu'étudiant, je peux soumettre mon rapport pour vérification (SOUMIS).
+10.	En tant qu'étudiant, je peux suivre l'état d'avancement de mon dossier en temps réel.
+11.	En tant qu'étudiant, je reçois une notification quand mon rapport change d'état.
+12.	En tant qu'étudiant, je peux consulter les commentaires de rejet si mon dossier est INCOMPLET.
+13.	En tant qu'étudiant, je peux soumettre une version corrigée de mon rapport après rejet.
+14.	En tant qu'étudiant, je peux télécharger le PV final de ma soutenance une fois généré.
+15.	En tant qu'étudiant, je peux consulter mon historique de soumissions.
+16.	En tant qu'étudiant, je peux modifier mes informations personnelles (email, téléphone).
+17.	En tant qu'étudiant, je peux changer mon mot de passe.
+Enseignants-Visiteurs (N2)
+18.	En tant qu'enseignant-visiteur, je peux consulter en lecture seule les rapports ACCEPTÉS.
+19.	En tant qu'enseignant-visiteur, je peux rechercher des mémoires par thématique/spécialité.
+20.	En tant qu'enseignant-visiteur, je peux voir la liste des encadrants et jurys par rapport.
+21.	En tant qu'enseignant-visiteur, je peux consulter le calendrier des soutenances.
+22.	En tant qu'enseignant-visiteur, je peux exporter la liste des mémoires dans ma spécialité.
+23.	En tant qu'enseignant-visiteur, je reçois des notifications des soutenances à venir.
+24.	En tant qu'enseignant-visiteur, je peux modifier mes informations de profil.
+Membres Commission (N3)
+25.	En tant que membre commission, je peux voir la file des rapports EN_COMMISSION.
+26.	En tant que membre commission, je peux ouvrir un dossier pour l'examiner en détail.
+27.	En tant que membre commission, je peux télécharger le rapport pour lecture approfondie.
+28.	En tant que membre commission, je peux valider un rapport (ACCEPTÉ).
+29.	En tant que membre commission, je peux rejeter un rapport avec motif (REFUSÉ).
+30.	En tant que membre commission, je peux assigner des encadrants/directeurs au rapport.
+31.	En tant que membre commission, je peux programmer une date de soutenance.
+32.	En tant que membre commission, je peux constituer le jury de soutenance.
+33.	En tant que membre commission, je peux générer le PV de délibération.
+34.	En tant que membre commission, je peux signer électroniquement le PV.
+35.	En tant que membre commission, je peux filtrer les rapports par état/spécialité.
+36.	En tant que membre commission, je peux voir l'historique de mes décisions.
+37.	En tant que membre commission, je reçois des alertes pour les dossiers en attente >5 jours.
+Admin Scolarité (N4a)
+38.	En tant qu'admin scolarité, je peux créer/modifier/supprimer des comptes étudiants.
+39.	En tant qu'admin scolarité, je peux importer une liste d'étudiants via CSV.
+40.	En tant qu'admin scolarité, je peux générer des identifiants/mots de passe pour nouveaux comptes.
+41.	En tant qu'admin scolarité, je peux gérer les inscriptions des étudiants par année.
+42.	En tant qu'admin scolarité, je peux enregistrer les évaluations et notes.
+43.	En tant qu'admin scolarité, je peux créer/modifier/supprimer des UE et ECUE.
+44.	En tant qu'admin scolarité, je peux gérer les années académiques (ouverture/clôture).
+45.	En tant qu'admin scolarité, je peux créer/modifier/supprimer des spécialités.
+46.	En tant qu'admin scolarité, je peux générer des relevés de notes.
+47.	En tant qu'admin scolarité, je peux exporter des statistiques sur les parcours.
+48.	En tant qu'admin scolarité, je peux enregistrer les stages étudiants.
+Admin Conformité (N4b)
+49.	En tant qu'admin conformité, je peux voir la liste des rapports SOUMIS.
+50.	En tant qu'admin conformité, je peux vérifier la conformité administrative des dossiers.
+51.	En tant qu'admin conformité, je peux marquer un rapport comme CONFORME.
+52.	En tant qu'admin conformité, je peux marquer un rapport comme INCOMPLET avec commentaires.
+53.	En tant qu'admin conformité, je peux transférer les dossiers CONFORMES en commission.
+54.	En tant qu'admin conformité, je peux relancer automatiquement les étudiants après délai.
+55.	En tant qu'admin conformité, je peux générer des statistiques sur les taux de conformité.
+56.	En tant qu'admin conformité, je peux consulter l'historique des vérifications.
+57.	En tant qu'admin conformité, je peux imprimer des fiches de suivi par dossier.
+Admin Général (N4c)
+58.	En tant qu'admin général, je peux créer/modifier/supprimer tout type de compte utilisateur.
+59.	En tant qu'admin général, je peux attribuer/retirer des rôles et permissions.
+60.	En tant qu'admin général, je peux configurer les membres actifs de la commission (3 max).
+61.	En tant qu'admin général, je peux superviser l'ensemble du workflow de validation.
+62.	En tant qu'admin général, je peux réassigner des dossiers entre membres commission.
+63.	En tant qu'admin général, je peux annuler/modifier des décisions prises par la commission.
+64.	En tant qu'admin général, je peux consulter le tableau de bord global avec KPIs.
+65.	En tant qu'admin général, je peux générer des rapports d'activité périodiques.
+66.	En tant qu'admin général, je peux consulter le journal d'audit complet du système.
+67.	En tant qu'admin général, je peux effectuer des sauvegardes manuelles de la base.
+68.	En tant qu'admin général, je peux configurer les modèles de documents (PV, notifications).
+69.	En tant qu'admin général, je peux définir les règles de workflow et transitions d'états.
+70.	En tant qu'admin général, je peux consulter les logs système et performances.
+Transverses/Système
+71.	Le système envoie des notifications par email à chaque changement d'état.
+72.	Le système journalise toutes les actions utilisateurs dans la table pister.
+73.	Le système vérifie automatiquement le format des fichiers téléversés.
+74.	Le système bloque l'ajout d'un 4ème membre actif dans la commission.
+75.	Le système génère des PDF à partir des modèles Word/templates.
+76.	Le système effectue des sauvegardes automatiques quotidiennes.
+77.	Le système produit des statistiques d'utilisation hebdomadaires.
+78.	Le système applique les contraintes de workflow selon les rôles.
+79.	Le système détecte et alerte en cas d'inactivité prolongée sur dossiers.
+80.	Le système permet l'export de données au format Excel/CSV.
+
